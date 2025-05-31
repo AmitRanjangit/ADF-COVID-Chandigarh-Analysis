@@ -2,47 +2,40 @@
 Azure Data Factory pipeline for processing COVID data from Chandigarh
 
 ## Project Overview
-This project demonstrates key Azure Data Factory (ADF) concepts using a single CSV file containing COVID-19 case data from Chandigarh, India.
+Split and Export COVID Records by Age Group and Gender
 
-While the dataset is limited to one file and the pipeline is not fully automated end-to-end, this project showcases the use of several important ADF activities and features, including Copy Activity, Lookup, ForEach loops, Web Activity, Variables, and Parameters.
+## Overview
+This Azure Data Factory (ADF) pipeline processes a CSV dataset containing COVID records with fields such as AGE and GENDER. The objective is to split the dataset into four distinct categories and export each subset into a separate file:
 
-The main goal is to provide a clear example of how these components can be used together in data integration workflows within Azure Data Factory.
+minor_male.csv – AGE < 18 and GENDER = Male
+minor_female.csv – AGE < 18 and GENDER = Female
+adult_male.csv – AGE >= 18 and GENDER = Male
+adult_female.csv – AGE >= 18 and GENDER = Female
 
----
+What This Pipeline Does
+Uses a Mapping Data Flow instead of Copy Data to handle complex row-level filtering and to create multiple outputs.
+Source transformation reads the original CSV file from Azure Blob Storage.
+Conditional Split transformation divides the incoming dataset into four branches based on age and gender conditions.
+Each branch is connected to a Sink that writes filtered data to a unique output location.
 
-## Dataset Description
-The dataset used contains the following fields:
+ADF Components Used
+Source: Azure Blob Storage (CSV file with AGE, GENDER)
+Mapping Data Flow: Includes conditional logic to split data
+Sinks: One for each age and gender category
 
-| Column Name    | Description                                  |
-| -------------- | --------------------------------------------|
-| STATE          | Name of the state (Chandigarh)               |
-| CITY NAME      | City within the state                         |
-| SAMPLE ID      | Unique identifier for each COVID-19 sample   |
-| AGE            | Age of the individual tested                  |
-| GENDER         | Gender of the individual                       |
-| SAMPLE RESULT  | Test result (e.g., Positive, Negative)        |
-| RESULT DATE    | Date when the test result was reported         |
-| CURRENT STATUS | Patient status (e.g., Recovered, Active, Deceased) |
+Pipeline: Executes the Mapping Data Flow
 
----
-
-## ADF Concepts Demonstrated
-
-- Copy Activity: Copying the CSV data from Azure Blob Storage to a destination store or staging area.
-- Lookup Activity: Retrieving metadata or performing conditional checks on the data.
-- ForEach Activity: Iterating over rows or datasets for individual processing or validation.
-- Web Activity: Calling external REST APIs or simulating notifications based on data.
-- Variables and Parameters: Controlling dynamic pipeline behavior and passing values between activities.
-
----
-
-## Pipeline Workflow Summary
-
-1. Manual Upload of Data: The COVID-19 CSV file is manually uploaded to Azure Blob Storage as the data source.
-2. Copy Activity: Copies the CSV data to a target location, demonstrating data movement capabilities.
-3. Lookup Activity: Performs checks or data validations on the copied data.
-4. ForEach Loop: Iterates over data entries for row-wise processing or logic demonstration.
-5. Web Activity: Simulates external service calls, such as triggering alerts or APIs.
-6. Use of Variables and Parameters: Demonstrates dynamic control and passing of runtime values within the pipeline.
-
-> Note: This project is intended as a learning and demonstration exercise and does not include a fully automated pipeline triggered by events or schedules.
+Output Directory Structure
+Example output directory structure in the Blob container:
+output/
+├── minor/
+│   ├── male/
+│   │   └── part-00000.csv
+│   └── female/
+│       └── part-00000.csv
+├── adult/
+│   ├── male/
+│   │   └── part-00000.csv
+│   └── female/
+│       └── part-00000.csv
+Each file contains only the records relevant to that specific group.
