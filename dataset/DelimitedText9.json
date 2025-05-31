@@ -1,0 +1,88 @@
+{
+	"name": "DelimitedText9",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_CovidData",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "COVID_CASES_CHANDIGARH.csv",
+				"container": "coviddata"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "STATE",
+				"type": "String"
+			},
+			{
+				"name": "CITY NAME",
+				"type": "String"
+			},
+			{
+				"name": "WARD NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "WARD NAME",
+				"type": "String"
+			},
+			{
+				"name": "SAMPLE\nID",
+				"type": "String"
+			},
+			{
+				"name": "AGE",
+				"type": "String"
+			},
+			{
+				"name": "GENDER",
+				"type": "String"
+			},
+			{
+				"name": "LONGITUTE",
+				"type": "String"
+			},
+			{
+				"name": "LATITUDE",
+				"type": "String"
+			},
+			{
+				"name": "SAMPLE\nRESULT",
+				"type": "String"
+			},
+			{
+				"name": "RESULT DATE",
+				"type": "String"
+			},
+			{
+				"name": "CURRENT STATUS",
+				"type": "String"
+			},
+			{
+				"name": "ACQUIRED OVERCEASES",
+				"type": "String"
+			},
+			{
+				"name": "LOCALY ACQUIRED ",
+				"type": "String"
+			},
+			{
+				"name": "CONTACT DETERMINED-NOT IDENTIFIED/UNDER INVESTIGATION",
+				"type": "String"
+			},
+			{
+				"name": "Prop_15",
+				"type": "String"
+			}
+		]
+	}
+}

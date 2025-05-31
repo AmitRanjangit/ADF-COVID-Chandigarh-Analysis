@@ -1,0 +1,104 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText9",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText5",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText6",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText7",
+						"type": "DatasetReference"
+					},
+					"name": "sink3"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText8",
+						"type": "DatasetReference"
+					},
+					"name": "sink4"
+				}
+			],
+			"transformations": [
+				{
+					"name": "split1"
+				},
+				{
+					"name": "split2"
+				},
+				{
+					"name": "split3"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          STATE as string,",
+				"          {CITY NAME} as string,",
+				"          {WARD NUMBER} as string,",
+				"          {WARD NAME} as string,",
+				"          {SAMPLE\\nID} as string,",
+				"          AGE as string,",
+				"          GENDER as string,",
+				"          LONGITUTE as string,",
+				"          LATITUDE as string,",
+				"          {SAMPLE\\nRESULT} as string,",
+				"          {RESULT DATE} as string,",
+				"          {CURRENT STATUS} as string,",
+				"          {ACQUIRED OVERCEASES} as string,",
+				"          {LOCALY ACQUIRED } as string,",
+				"          {CONTACT DETERMINED-NOT IDENTIFIED/UNDER INVESTIGATION} as string,",
+				"          Prop_15 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     skipLines: 1) ~> source1",
+				"source1 split(toInteger(AGE) < 18 && GENDER == 'Male',",
+				"     disjoint: false) ~> split1@(MinorMale, notminormale)",
+				"split1@notminormale split(toInteger(AGE) < 18 && GENDER == 'Female',",
+				"     disjoint: false) ~> split2@(MinorFemale, adults)",
+				"split2@adults split(toInteger(AGE) >= 18 && GENDER == 'Male',",
+				"     disjoint: false) ~> split3@(AdultMale, AdultFemale)",
+				"split1@MinorMale sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"split2@MinorFemale sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2",
+				"split3@AdultMale sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink3",
+				"split3@AdultFemale sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink4"
+			]
+		}
+	}
+}
